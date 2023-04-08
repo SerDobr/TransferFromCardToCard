@@ -11,10 +11,9 @@ import ru.netology.web.page.*;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.netology.web.data.DataHelper.getFirstCard;
-import static ru.netology.web.data.DataHelper.getSecondCard;
-import static ru.netology.web.page.DashboardPage.firstCardButton;
-import static ru.netology.web.page.DashboardPage.secondCardButton;
+import static ru.netology.web.data.DataHelper.*;
+
+
 
 public class MoneyTransferTest {
 
@@ -38,7 +37,7 @@ public class MoneyTransferTest {
         var secondCardBalanceStart = dashboardPage.getSecondCardBalance();
         int amount = 6000;
 
-        var transfer = firstCardButton();
+        var transfer = new DashboardPage().firstCardButton();
         transfer.transferFromCardToCard(amount, getSecondCard());
         var firstCardBalanceResult = firstCardBalanceStart + amount;
         var secondCardBalanceResult = secondCardBalanceStart - amount;
@@ -46,6 +45,8 @@ public class MoneyTransferTest {
         assertEquals(firstCardBalanceResult, dashboardPage.getFirstCardBalance());
         assertEquals(secondCardBalanceResult, dashboardPage.getSecondCardBalance());
     }
+
+
 
     @Test
     @DisplayName("Replenishment of the second card account")
@@ -55,7 +56,7 @@ public class MoneyTransferTest {
         var secondCardBalanceStart = dashboardPage.getSecondCardBalance();
         int amount = 5000;
 
-        var transfer = secondCardButton();
+        var transfer = new DashboardPage().secondCardButton();
         transfer.transferFromCardToCard(amount, getFirstCard());
         var firstCardBalanceResult = firstCardBalanceStart - amount;
         var secondCardBalanceResult = secondCardBalanceStart + amount;
@@ -70,11 +71,12 @@ public class MoneyTransferTest {
         var dashboardPage = new DashboardPage();
         int amount = 20000;
 
-        var transfer = firstCardButton();
-        transfer.transferFromCardToCard(amount, getSecondCard());
+        var transfer = new DashboardPage().firstCardButton();
+        transfer.transferFromCardToCard(amount, getThirdCard());
+        var topUpPage = new TopUpPage();
+        topUpPage.errorWindow();
 
     }
-
 
 }
 

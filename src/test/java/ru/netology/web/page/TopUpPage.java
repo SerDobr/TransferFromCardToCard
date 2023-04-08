@@ -17,11 +17,10 @@ public class TopUpPage {
         sum.setValue(String.valueOf(amount));
         account.setValue(String.valueOf(from));
         topUpButton.click();
-        new DashboardPage();
     }
 
 
-    public void ErrorWindow() {
+    public void errorWindow() {
         SelenideElement errorNotification = $("[data-test-id = 'error-notification']");
         errorNotification.shouldBe(visible);
 
