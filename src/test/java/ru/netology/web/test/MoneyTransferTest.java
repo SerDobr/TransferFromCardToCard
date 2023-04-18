@@ -15,8 +15,9 @@ import static ru.netology.web.data.DataHelper.*;
 
 
 
-public class MoneyTransferTest {
 
+public class MoneyTransferTest {
+    DashboardPage dashboardpage;
     @BeforeEach
     void setUp() {
         Configuration.holdBrowserOpen = true;
@@ -25,16 +26,15 @@ public class MoneyTransferTest {
         var authInfo = DataHelper.getAuthInfo();
         var verificationPage = loginPage.validLogin(authInfo);
         var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
-        verificationPage.validVerify(verificationCode);
+        dashboardpage = verificationPage.validVerify(verificationCode);
 
     }
 
     @Test
     @DisplayName("Replenishment of the first card account")
     public void shouldReplenishedFirstCard() {
-        var dashboardPage = new DashboardPage();
-        var firstCardBalanceStart = dashboardPage.getFirstCardBalance();
-        var secondCardBalanceStart = dashboardPage.getSecondCardBalance();
+        var firstCardBalanceStart = dashboardpage.getFirstCardBalance();
+        var secondCardBalanceStart = dashboardpage.getSecondCardBalance();
         int amount = 6000;
 
         var transfer = new DashboardPage().firstCardButton();
@@ -42,8 +42,8 @@ public class MoneyTransferTest {
         var firstCardBalanceResult = firstCardBalanceStart + amount;
         var secondCardBalanceResult = secondCardBalanceStart - amount;
 
-        assertEquals(firstCardBalanceResult, dashboardPage.getFirstCardBalance());
-        assertEquals(secondCardBalanceResult, dashboardPage.getSecondCardBalance());
+        assertEquals(firstCardBalanceResult, dashboardpage.getFirstCardBalance());
+        assertEquals(secondCardBalanceResult, dashboardpage.getSecondCardBalance());
     }
 
 
@@ -51,9 +51,8 @@ public class MoneyTransferTest {
     @Test
     @DisplayName("Replenishment of the second card account")
     public void shouldReplenishedSecondCard() {
-        var dashboardPage = new DashboardPage();
-        var firstCardBalanceStart = dashboardPage.getFirstCardBalance();
-        var secondCardBalanceStart = dashboardPage.getSecondCardBalance();
+        var firstCardBalanceStart = dashboardpage.getFirstCardBalance();
+        var secondCardBalanceStart = dashboardpage.getSecondCardBalance();
         int amount = 5000;
 
         var transfer = new DashboardPage().secondCardButton();
@@ -61,14 +60,13 @@ public class MoneyTransferTest {
         var firstCardBalanceResult = firstCardBalanceStart - amount;
         var secondCardBalanceResult = secondCardBalanceStart + amount;
 
-        assertEquals(firstCardBalanceResult, dashboardPage.getFirstCardBalance());
-        assertEquals(secondCardBalanceResult, dashboardPage.getSecondCardBalance());
+        assertEquals(firstCardBalanceResult, dashboardpage.getFirstCardBalance());
+        assertEquals(secondCardBalanceResult, dashboardpage.getSecondCardBalance());
     }
 
     @Test
     @DisplayName("Should not transfer money if the amount is more on the balance")
     public void shouldNotTransferMoneyIfAmountMoreBalance() {
-        var dashboardPage = new DashboardPage();
         int amount = 20000;
 
         var transfer = new DashboardPage().firstCardButton();
