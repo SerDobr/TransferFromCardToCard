@@ -14,10 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.netology.web.data.DataHelper.*;
 
 
-
-
 public class MoneyTransferTest {
     DashboardPage dashboardpage;
+
     @BeforeEach
     void setUp() {
         Configuration.holdBrowserOpen = true;
@@ -35,17 +34,16 @@ public class MoneyTransferTest {
     public void shouldReplenishedFirstCard() {
         var firstCardBalanceStart = dashboardpage.getFirstCardBalance();
         var secondCardBalanceStart = dashboardpage.getSecondCardBalance();
-        int amount = 6000;
+        int amount = 5000;
 
-        var transfer = new DashboardPage().firstCardButton();
-        transfer.transferFromCardToCard(amount, getSecondCard());
+
+        dashboardpage.firstCardButton().transferFromCardToCard(amount, getSecondCard());
         var firstCardBalanceResult = firstCardBalanceStart + amount;
         var secondCardBalanceResult = secondCardBalanceStart - amount;
 
         assertEquals(firstCardBalanceResult, dashboardpage.getFirstCardBalance());
         assertEquals(secondCardBalanceResult, dashboardpage.getSecondCardBalance());
     }
-
 
 
     @Test
@@ -55,8 +53,8 @@ public class MoneyTransferTest {
         var secondCardBalanceStart = dashboardpage.getSecondCardBalance();
         int amount = 5000;
 
-        var transfer = new DashboardPage().secondCardButton();
-        transfer.transferFromCardToCard(amount, getFirstCard());
+
+        dashboardpage.secondCardButton().transferFromCardToCard(amount, getFirstCard());
         var firstCardBalanceResult = firstCardBalanceStart - amount;
         var secondCardBalanceResult = secondCardBalanceStart + amount;
 
@@ -65,15 +63,23 @@ public class MoneyTransferTest {
     }
 
     @Test
-    @DisplayName("Should not transfer money if the amount is more on the balance")
+    @DisplayName("Should not transfer money if the amount is more the balance")
     public void shouldNotTransferMoneyIfAmountMoreBalance() {
+        var firstCardBalanceStart = dashboardpage.getFirstCardBalance();
+        var secondCardBalanceStart = dashboardpage.getSecondCardBalance();
         int amount = 20000;
 
-        var transfer = new DashboardPage().firstCardButton();
-        transfer.transferFromCardToCard(amount, getThirdCard());
-        var topUpPage = new TopUpPage();
-        topUpPage.errorWindow();
 
+        var transferPage = dashboardpage.firstCardButton();
+        transferPage.makeTransfer(amount, getSecondCard());
+        transferPage.errorWindow("Выполнена попытка перевода суммы,превышающий остаток на карте списания!");
+
+        var firstCardBalanceActual = dashboardpage.getFirstCardBalance();
+        var secondCardBalanceActual = dashboardpage.getSecondCardBalance();
+
+
+        assertEquals(firstCardBalanceStart, firstCardBalanceActual);
+        assertEquals(secondCardBalanceStart, secondCardBalanceActual);
     }
 
 }
